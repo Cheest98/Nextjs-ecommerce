@@ -2,6 +2,8 @@ import PriceTag from "@/components/PriceTag";
 import { prisma } from "@/lib/db/prisma";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import AddToCartButton from "./AddToCartButton";
+import { incrementProductQuantity } from "./actions";
 
 interface ProductPageProps {
   params: {
@@ -29,6 +31,10 @@ export default async function ProductPage({
         <h1 className="bold text-5xl"> {product.name}</h1>
         <PriceTag price={product.price} className="mt-4" />
         <p className="py-6">{product.description}</p>
+        <AddToCartButton
+          productId={product.id}
+          incrementProductQuantity={incrementProductQuantity}
+        />
       </div>
     </div>
   );
