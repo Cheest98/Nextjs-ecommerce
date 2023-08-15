@@ -1,9 +1,12 @@
+import logo from "@/assets/logo.png";
+import { getCart } from "@/lib/db/cart";
+import { getServerSession } from "next-auth";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/assets/logo.png";
 import { redirect } from "next/navigation";
-import { getCart } from "@/lib/db/cart";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 import ShoppingCartButton from "./ShoppingCartButton";
+import UserMenuButton from "./UserMenuButton";
 
 async function searchProducts(formData: FormData) {
   "use server";
@@ -16,14 +19,16 @@ async function searchProducts(formData: FormData) {
 }
 
 export default async function Navbar() {
+  const session = await getServerSession(authOptions);
   const cart = await getCart();
 
   return (
     <div className="bg-base-100">
-      <div className="max-w-7x1  navbar m-auto flex-col gap-2 sm:flex-row">
+      <div className="navbar m-auto max-w-7xl flex-col gap-2 sm:flex-row">
         <div className="flex-1">
           <Link href="/" className="btn-ghost btn text-xl normal-case">
             <Image src={logo} height={40} width={40} alt="Flowmazon logo" />
+            Flowmazon
           </Link>
         </div>
         <div className="flex-none gap-2">
@@ -32,11 +37,12 @@ export default async function Navbar() {
               <input
                 name="searchQuery"
                 placeholder="Search"
-                className="min-w-300 input-bordered input w-full"
+                className="input-bordered input w-full min-w-[100px]"
               />
             </div>
           </form>
-          <ShoppingCartButton cart={cart}></ShoppingCartButton>
+          <ShoppingCartButton cart={cart} />
+          <UserMenuButton session={session} />
         </div>
       </div>
     </div>
